@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ListItem } from 'react-native-elements';
 
 export default function HomeScreen() {
-  const baseUrl = 'http://localhost:8000/api';
+  const baseUrl = 'http://vufrans.me:8000/api';
   const [state, setState] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
 
