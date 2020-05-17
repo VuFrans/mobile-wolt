@@ -53,7 +53,7 @@ export default function HomeScreen() {
     <Container>
       <Header>
         <Body>
-          <Title>New Wolt</Title>
+          <Title>Home</Title>
         </Body>
       </Header>
       <Item>
