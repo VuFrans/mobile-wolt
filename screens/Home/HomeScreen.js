@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
 import axios from 'axios';
-import { ListItem } from 'react-native-elements';
+import ResCard from '../../components/Card/Card';
+import { Container, Header, Content, Body, Title } from 'native-base';
 
 export default function HomeScreen() {
   const baseUrl = 'http://vufrans.me:8000/api';
@@ -20,41 +20,22 @@ export default function HomeScreen() {
       .catch((err) => console.error(err));
   };
 
-  const listSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 5,
-          width: '80%',
-          backgroundColor: '#fff',
-          marginLeft: '10%',
-        }}
-      />
-    );
-  };
-
-  const renderItem = ({ item }) => {
-    return <ListItem style={{ width: 350 }} title={item.name} bottomDivider />;
-  };
-
   return (
-    <View style={styles.container}>
-      <Text>New Wolt</Text>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={(item) => renderItem(item)}
-        data={state}
-        ItemSeparatorComponent={listSeparator}
-      />
-    </View>
+    <Container>
+      <Header>
+        <Body>
+          <Title>New Wolt</Title>
+        </Body>
+      </Header>
+      <Content>
+        {state.map((restaurant, index) => (
+          <ResCard
+            key={index}
+            restaurant={restaurant}
+            onPress={() => console.log('Press')}
+          />
+        ))}
+      </Content>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
