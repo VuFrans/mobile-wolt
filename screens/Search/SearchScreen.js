@@ -16,9 +16,12 @@ import * as Location from 'expo-location';
 
 export default function SearchScreen() {
   const baseUrl = 'http://vufrans.me:8000/api';
-  const [state, setState] = useState();
+  const [state, setState] = useState({
+    location: '',
+    search: '',
+    hasRestaurants: null,
+  });
   const [nearby, setNearby] = useState([]);
-  const [hasRestaurants, setHasRestaurants] = useState();
 
   useEffect(() => {
     getLocation();
@@ -30,33 +33,34 @@ export default function SearchScreen() {
       Alert.alert('No permission to access location');
     } else {
       let location = await Location.getCurrentPositionAsync({});
-      setState(location);
+      setState({ ...state, location: location });
     }
   };
 
   const getNearbyRestaurants = async () => {
     const response = await axios.get(
-      `${baseUrl}/search?q&lat=${state.coords.latitude}&lon=${state.coords.longitude}`
+      `${baseUrl}/search?q&lat=${state.location.coords.latitude}&lon=${state.location.coords.longitude}`
     );
     const data = response.data;
     if (data.length >= 1) {
       setNearby(data);
-      setHasRestaurants(true);
+      setState({ ...state, hasRestaurants: true });
     } else {
       setNearby([]);
-      setHasRestaurants(false);
+      setState({ ...state, hasRestaurants: false });
     }
   };
 
   const showRestaurants = async () => {
-    const centralLat = 60.170971;
-    const centralLon = 24.940789;
+    // Location is Laakso, Helsinki (Demo purpose)
+    const Lat = 60.193602;
+    const Lon = 24.906536;
     const response = await axios.get(
-      `${baseUrl}/search?q&lat=${centralLat}&lon=${centralLon}`
+      `${baseUrl}/search?q&lat=${Lat}&lon=${Lon}`
     );
     const data = response.data;
     setNearby(data);
-    setHasRestaurants(true);
+    setState({ ...state, hasRestaurants: true });
   };
 
   const textCard = (
@@ -81,7 +85,7 @@ export default function SearchScreen() {
           nearby.map((restaurant, index) => (
             <ResCard key={index} restaurant={restaurant} />
           ))}
-        {hasRestaurants == false && textCard}
+        {state.hasRestaurants == false && textCard}
       </Content>
       <Button info block onPress={getNearbyRestaurants}>
         <Text>Search Nearby Restaurants (3km)</Text>
